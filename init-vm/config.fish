@@ -13,7 +13,7 @@ function fish_prompt -d "Write out the prompt"
 	if [ $git_branch ]
 		printf 'git:(%s%s%s)' (set_color green) $git_branch (set_color normal)  
 	end
-	echo -e '\n> '
+	echo -e '\n~> '
 end
 
 # alias
