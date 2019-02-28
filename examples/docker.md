@@ -2,24 +2,40 @@
 ``` bash
 # 启动ubuntu容器，设置端口映射 宿主机8080=>容器内80, 设置停止容器后自动删除容器
 docker run -it --rm -p 8080:80 ubuntu:16.04
-# push容器到docker hub
-docker push yonh/php
-
 # 拉取镜像
 docker pull python
 docker pull ruby
-# 查看日志
-docker logs -f wekan-app
 
-# 启动容器 mytools
-docker start mytools
+# push容器到docker hub
+docker push yonh/php
+
+
+# 查看日志
+docker logs -f myapp
+docker logs myapp
+
+# 启动容器 myapp
+docker start myapp
 
 # 进入容器 mytools
-docker exec -it mytools bash
+docker exec -it myapp bash
 # 重启容器
-docker restart dns
+docker restart myapp
+# 停止容器
+docker stop myapp
 # 删除容器 -f强制删除
 docker rm -f mytools
+
+# 查看所有容器
+docker ps -a
+# 查看运行中容器
+docker ps
+
+
+# 删除镜像
+docker rmi ubuntu:16.04
+# 查看镜像
+docker images
 
 # 启动一个mysql实例, 自动重启， root密码为root 端口映射3306=>3306，mysql版本5.6
 docker run --name mysql --restart=always -e MYSQL_ROOT_PASSWORD=root -d -p3306:3306 mysql:5.6
@@ -44,17 +60,10 @@ docker run -d --name mysql \
 # 启动mysql，挂载mysql数据目录到当前目录data
 docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=root -v "$PWD/data":/var/lib/mysql  -p3306:3306  mysql:5.6
 
-# 删除镜像
-docker rmi ubuntu:16.04
-# 查看镜像
-docker images
-# 查看所有容器
-docker ps -a
-
-
 # 导出镜像
 docker save docker.elastic.co.beats.filebeat:5.5.2 > docker.elastic.co.beats.filebeat_5.5.2.img
 
 # 导入镜像
 docker load < ./docker.elastic.co.beats.filebeat_5.5.2.img
 ```
+
