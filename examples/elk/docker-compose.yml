@@ -1,0 +1,73 @@
+version: '2'
+
+services:
+  elasticsearch:
+    image: elasticsearch:5.5.2
+    restart: always
+    volumes:
+      #- ./conf/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      #- ./in:/in
+      #- ./out:/out
+      - ./elasticsearch_data:/usr/share/elasticsearch/data
+    #    - ./db_mysql_nextcloud:/var/lib/mysql
+    #  environment:
+    #    - MYSQL_ROOT_PASSWORD=4835adcf961805336ac6aa9458f0da9f
+    #
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  filebeat:
+    container_name: filebeat
+    #image: docker.elastic.co/beats/filebeat:5.5.2
+    build: filebeat
+    image: yonh/filebeat
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers
+
+  #filebeat:
+  #  image: docker.elastic.co/beats/filebeat:5.5.2
+  #  volumes:
+  #  - ./conf/filebeat.yml:/usr/share/filebeat/filebeat.yml
+  #  - ./in:/in
+  #  - ./out:/out
+
+  kibana:
+    image: kibana:5.5.2
+    restart: always
+    container_name: kibana
+    #ports:
+    #    - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://192.168.99.100:9200
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: changeme
+
+  kibana-nginx:
+    container_name: kibana-nginx
+    image: yonh/kibana-nginx
+    restart: always
+    build: kibana-nginx
+    ports:
+      - "5601:80"
+
+    #logstash:
+    #  image: docker.elastic.co/logstash/logstash:5.5.2
+    #environment:
+    #  MYSQL_ROOT_PASSWORD: c5549507912203e2c4910006b2855f1e
+    #  MYSQL_PASSWORD: 7d904ea7b5d4f684bb35f044a268a102
+    #  MYSQL_DATABASE: wordpress
+    # volumes:
+    #- ./logstash.yml:/usr/share/logstash/config/logstash.yml
+    # - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    # ports:
+    # - "9600:9600"
+    # - "5044:5044"
+
+networks:
+  default:
+    external:
+      name: apps
+
+
