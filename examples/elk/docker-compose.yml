@@ -10,7 +10,9 @@ services:
       #- ./out:/out
       - ./elasticsearch_data:/usr/share/elasticsearch/data
     #    - ./db_mysql_nextcloud:/var/lib/mysql
-    #  environment:
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     #    - MYSQL_ROOT_PASSWORD=4835adcf961805336ac6aa9458f0da9f
     #
     ports:
